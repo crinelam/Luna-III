@@ -69,7 +69,7 @@
         "Name[uk]": "Луна (III)",
         "Name[x-test]": "xxLuna (III)xx",
         "Name[zh_CN]": "月相",
-        "License": "GPL-2.0",
+        "License": "GPL-3.0",
         "Version": "2.2.0",
         "Website": "https://github.com/crinelam/Luna-III"
     },
