@@ -1,4 +1,6 @@
 /**
+    Copyright 2024 Cristina Ibañez <crinelam@tutamail.com>
+      Updated the Luna QML plasmod from Plasma 5 to Plasma 6.
     Copyright 2016 Bill Binder <dxtwjb@gmail.com>
 
     This program is free software; you can redistribute it and/or modify

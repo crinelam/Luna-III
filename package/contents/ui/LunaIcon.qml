@@ -1,5 +1,7 @@
 /**
 
+    Copyright 2024 Cristina Ibañez <crinelam@tutamail.com>
+      Updated the Luna QML plasmod from Plasma 5 to Plasma 6.
     Copyright 2016,2017 Bill Binder <dxtwjb@gmail.com>
     Copyright (C) 2011, 2012, 2013 Glad Deschrijver <glad.deschrijver@gmail.com>
 
@@ -18,10 +20,14 @@
 
 */
 
-import QtQuick 2.1
-import QtGraphicalEffects 1.12
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
+import QtQuick
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.plasmoid
+
+import QtQuick.Effects
+import Qt5Compat.GraphicalEffects
+
+import org.kde.kirigami as Kirigami
 
 import "../code/shadowcalcs.js" as ShadowCalcs
 
@@ -41,23 +47,20 @@ Item {
     property bool showTycho: false
     property bool showCopernicus: false
 
+    property double shadowOpacity: 0.6
+
     // Degrees. 0= new moon, 90= first quarter, 180= full moon, 270= third quarter
     property int theta: 45
 
-    PlasmaCore.Svg {
-        id: lunaSvg
-        imagePath: lunarImage === '' ? '' : plasmoid.file("data", lunarImage)
-    }
-
-    PlasmaCore.SvgItem {
+    Image {
         id: lunaSvgItem
-        visible: false 
+        visible: true 
 
         anchors.centerIn: parent
         width: Math.min(parent.width, parent.height)
         height: Math.min(parent.width, parent.height)
 
-        svg: lunaSvg
+        source: lunarImage === '' ? '' : "../data/" + lunarImage
 
         // Rotation to compensate the moon's image basic position to a north pole view
         // FIXME: Somehow it does not work when applied to OpacityMask or Blend
@@ -97,6 +100,10 @@ Item {
 
         onPaint:
         {
+
+            var ct = Math.cos(theta/180*Math.PI)
+            var radius = ShadowCalcs.setup(Math.floor(shadow.height/2))
+
             context.reset()
             context.globalAlpha = 0.9
             context.fillStyle = '#000000'
@@ -143,9 +150,6 @@ Item {
             }
 
             //console.log("Angle: " + theta.toString())
-
-            var ct = Math.cos(theta/180*Math.PI)
-            var radius = ShadowCalcs.setup(Math.floor(shadow.height/2))
 
             //console.log("radius: " + radius.toString())
 
@@ -195,6 +199,8 @@ Item {
         }
     }
 
+    // TODO: PORT THIS
+
     // Shadow acts as a transparecy mask
     OpacityMask {
         anchors.fill: lunaSvgItem
@@ -202,6 +208,7 @@ Item {
         maskSource: shadow
         invert: true
         rotation: latitude - 90
+        opacity: 0.2
         visible: transparentShadow
     }
 
@@ -211,6 +218,7 @@ Item {
         source: lunaSvgItem
         foregroundSource: shadow
         rotation: latitude - 90
+        opacity: shadowOpacity
         mode: "normal"
         visible: !transparentShadow
     }

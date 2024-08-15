@@ -29,6 +29,9 @@
     <entry name="diskColour" type="String">
       <default>#ffff80</default>
     </entry>
+    <entry name="shadowOpacity" type="double">
+      <default>0.6</default>
+    </entry>
   </group>
 
 </kcfg>

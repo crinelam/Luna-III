@@ -1,5 +1,7 @@
 /*
 
+    Copyright 2024 Cristina Ibañez <crinelam@tutamail.com>
+      Updated the Luna QML plasmod from Plasma 5 to Plasma 6.
     Copyright 2016 Bill Binder <dxtwjb@gmail.com>
       Updated the Luna QML plasmoid from Plasma 4 to Plasma 5.
     Copyright (C) 2011, 2012, 2013 Glad Deschrijver <glad.deschrijver@gmail.com>
@@ -19,10 +21,10 @@
 
 */
 
-import QtQuick 2.7
-import QtQuick.Layouts 1.2 as QtLayouts
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.plasmoid 2.0
+import QtQuick
+import QtQuick.Layouts as QtLayouts
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.plasmoid
 
 import "../code/phases.js" as Phases
 import "../code/lunacalc.js" as LunaCalc
@@ -152,17 +154,17 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             PlasmaComponents.ToolButton {
                 id: previousButton
-                iconSource: "go-previous"
+                icon.name: "go-previous"
                 onClicked: showPreviousPhases();
             }
             PlasmaComponents.ToolButton {
                 id: todayButton
-                iconSource: "go-jump-today"
+                icon.name: "go-jump-today"
                 onClicked: showTodayPhases();
             }
             PlasmaComponents.ToolButton {
                 id: nextButton
-                iconSource: "go-next"
+                icon.name: "go-next"
                 onClicked: showNextPhases();
             }
         }

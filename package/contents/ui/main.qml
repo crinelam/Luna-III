@@ -1,5 +1,7 @@
 /**
 
+    Copyright 2024 Cristina Ibañez <crinelam@tutamail.com>
+      Updated the Luna QML plasmod from Plasma 5 to Plasma 6.
     Copyright 2016,2017 Bill Binder <dxtwjb@gmail.com>
     Copyright (C) 2011, 2012, 2013 Glad Deschrijver <glad.deschrijver@gmail.com>
 
@@ -18,17 +20,17 @@
 
 */
 
-import QtQuick 2.1
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
-import QtQuick.Layouts 1.2 as QtLayouts
-import QtQuick.Controls 1.2 as QtControls
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import QtQuick
+import QtQuick.Layouts as QtLayouts
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.plasmoid
+import QtQuick.Controls as QtControls
+import org.kde.plasma.components as PlasmaComponents
 
 import "../code/phases.js" as Phases
 import "../code/lunacalc.js" as LunaCalc
 
-Item {
+PlasmoidItem {
     id: main
     property int minimumWidth
     property int minimumHeight
@@ -36,27 +38,28 @@ Item {
     property int maximumHeight
     property int preferredWidth
     property int preferredHeight
-    property var currentPhase
+    property var currentPhase: LunaCalc.getCurrentPhase(true);
 
     property bool showBackground: Plasmoid.configuration.showBackground
     property bool transparentShadow: Plasmoid.configuration.transparentShadow
     property int latitude: Plasmoid.configuration.latitude
     property int dateFormat: Plasmoid.configuration.dateFormat
     property string dateFormatString: Plasmoid.configuration.dateFormatString
+    property double shadowOpacity: Plasmoid.configuration.shadowOpacity
 
     property int lunarIndex: Plasmoid.configuration.lunarIndex
     property string diskColour: Plasmoid.configuration.diskColour
     property string lunarImage: ''
     property int lunarImageTweak: 0
 
-    Plasmoid.backgroundHints: showBackground ? "DefaultBackground" : "NoBackground"
-    Plasmoid.preferredRepresentation: Plasmoid.compactRepresentation
+    //backgroundHints: showBackground ? "DefaultBackground" : "NoBackground"
+    preferredRepresentation: compactRepresentation
 
-    Plasmoid.icon: ""
-    Plasmoid.toolTipMainText: currentPhase.text
-    Plasmoid.toolTipSubText: currentPhase.subText
+    //icon: ""
+    toolTipMainText: currentPhase.text
+    toolTipSubText: currentPhase.subText
 
-    Plasmoid.compactRepresentation: Item {
+    compactRepresentation: Item {
         id: compact
 
         property int latitude: main.latitude
@@ -98,6 +101,7 @@ Item {
             lunarImage: main.lunarImage
             lunarImageTweak: main.lunarImageTweak
             transparentShadow: main.transparentShadow
+            shadowOpacity: main.shadowOpacity
             diskColour: main.diskColour
 
             anchors.fill: parent
@@ -110,7 +114,7 @@ Item {
 
     }
 
-    Plasmoid.fullRepresentation: Item {
+    fullRepresentation: Item {
         id: full
 
         QtLayouts.Layout.preferredWidth: lunaWidget.QtLayouts.Layout.minimumWidth

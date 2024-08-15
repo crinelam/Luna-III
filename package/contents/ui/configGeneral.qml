@@ -1,4 +1,6 @@
 /**
+    Copyright 2024 Cristina Ibañez <crinelam@tutamail.com>
+      Updated the Luna QML plasmod from Plasma 5 to Plasma 6.
     Copyright 2016 Bill Binder <dxtwjb@gmail.com>
 
     This program is free software; you can redistribute it and/or modify
@@ -15,16 +17,20 @@
     along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.1
-import QtQuick.Controls 1.2 as QtControls
-import QtQuick.Layouts 1.2 as QtLayouts
-import QtQuick.Dialogs 1.0 as QtDialogs
+import QtQuick
+import QtQuick.Controls as QtControls
 
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kirigami as Kirigami
+
+import org.kde.plasma.plasma5support as Plasma5Support
+import QtQuick.Layouts as QtLayouts
+import QtQuick.Dialogs as QtDialogs
+
+import org.kde.plasma.components as PlasmaComponents
+//import org.kde.plasma.core 2.0 as PlasmaCore
 
 
-Item {
+Kirigami.FormLayout {
     id: generalPage
 
     property alias cfg_latitudeAuto: latitudeAuto.checked  // 0=Equator, +90=North Pole, -90=South Pole
@@ -42,6 +48,8 @@ Item {
     property alias cfg_showGrid: showGrid.checked
     property alias cfg_showTycho: showTycho.checked
     property alias cfg_showCopernicus: showCopernicus.checked
+
+    property alias cfg_shadowOpacity: shadowOpacity.value
 
     onCfg_lunarIndexChanged: {
         cfg_lunarImage = imageChoices.get(cfg_lunarIndex).filename
@@ -61,7 +69,7 @@ Item {
         id: imageChoices
     }
 
-    PlasmaCore.DataSource {
+    Plasma5Support.DataSource {
         id: geoSource
         engine: "geolocation"
         connectedSources: ["location"]
@@ -78,7 +86,7 @@ Item {
         visible: false
 
         onAccepted: {
-            diskColour.color = colorDialog.color
+            diskColour.color = colorDialog.selectedColor
         }
     }
 
@@ -94,7 +102,7 @@ Item {
 
             PlasmaComponents.ToolButton {
                 id: previousButton
-                iconSource: "go-previous"
+                icon.name: "go-previous"
                 enabled: cfg_lunarIndex > 0
                 onClicked: {
                     cfg_lunarIndex -= 1
@@ -114,11 +122,12 @@ Item {
               showGrid: cfg_showGrid
               showTycho: cfg_showTycho
               showCopernicus: cfg_showCopernicus
+              shadowOpacity: cfg_shadowOpacity
             }
 
             PlasmaComponents.ToolButton {
                 id: nextButton
-                iconSource: "go-next"
+                icon.name: "go-next"
                 enabled: cfg_lunarIndex < imageChoices.count-1
                 onClicked: {
                     cfg_lunarIndex += 1
@@ -162,7 +171,7 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    colorDialog.color = diskColour.color
+                    colorDialog.selectedColor = diskColour.color
                     colorDialog.visible = true
                 }
             }
@@ -181,13 +190,12 @@ Item {
                 horizontalAlignment: Text.AlignRight
             }
 
-            QtControls.Slider {
+            PlasmaComponents.Slider {
                 id: latitude
-                QtLayouts.Layout.fillWidth: true
-                minimumValue: -90.0
-                maximumValue: 90.0
+                from: -90.0
+                to: 90.0
                 stepSize: 5.0
-                tickmarksEnabled: true
+                //tickmarksEnabled: true
                 enabled: !cfg_latitudeAuto
             }
         }
@@ -242,13 +250,37 @@ Item {
             id: showBackground
             text: i18n("Show background")
         }
+
+        // TODO: Fix transparent shadow
         QtControls.Label {
             text: ""
+            visible: false
         }
         QtControls.CheckBox {
             id: transparentShadow
             text: i18n("Transparent shadow")
             enabled: cfg_lunarImage != ""
+            visible: false
+        }
+        QtControls.Label {
+            text: "Shadow Opacity"
+        }
+        QtLayouts.RowLayout {
+            spacing: 20
+
+            QtControls.Label {
+                id: lbl_opacity
+                text: Math.round(shadowOpacity.value * 100) / 100
+                QtLayouts.Layout.preferredWidth: 40
+                horizontalAlignment: Text.AlignRight
+            }
+
+            PlasmaComponents.Slider {
+                id: shadowOpacity
+                from: 0
+                to: 1
+                stepSize: 0.05
+            }
         }
     }
 }
